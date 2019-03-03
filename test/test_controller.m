@@ -1,6 +1,5 @@
 clear all
 
-scenario = prob.scenario.load('scenario.json');
 ship = prob.ship.load('ship_viknes830.json');
 
 % Conditions
