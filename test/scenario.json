@@ -1,0 +1,23 @@
+{
+    "name": "Scenario 1",
+    "x_limit": [-50, 1050],
+    "y_limit": [-50, 1050],
+    "t_max": 400,
+    "goal_position": [950, 950],
+    "start_position": [0,0],
+	"obstacles": [
+		{
+			"x": 500,
+			"y": 500,
+			"a": 300,
+			"b": 50,
+			"alpha": -0.7854
+		},{
+            "x": 600,
+            "y": 200,
+            "a": 75,
+            "b": 75,
+            "alpha": 0
+        }
+    ]
+}
