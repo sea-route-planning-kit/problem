@@ -11,7 +11,7 @@ psi_d = 0;
 controller = prob.gnc.control.Controller(u_d,psi_d);
 
 % Simulate
-trajectory = prob.ship.simulateShip(ship, x0, controller, 100, []); %@(x,T) controller.calculate(x,T,u_d,psi_d)
+trajectory = prob.ship.simulate(ship, x0, controller, 100, []); %@(x,T) controller.calculate(x,T,u_d,psi_d)
 
 % Plot
 figure(1);

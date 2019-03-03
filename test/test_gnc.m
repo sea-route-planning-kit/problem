@@ -11,7 +11,7 @@ x0 = timeseries([0 0 0 5 0 0],0);
 gnc = prob.gnc.GNC(path);
 
 % Simulate
-trajectory = prob.ship.simulateShip(ship, x0, gnc, 500, []);
+trajectory = prob.ship.simulate(ship, x0, gnc, 500, []);
 
 % Plot
 figure(1);
