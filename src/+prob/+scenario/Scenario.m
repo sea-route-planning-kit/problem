@@ -25,6 +25,16 @@ classdef Scenario
                 y < this.y_limit(1) | y > this.y_limit(2);
         end
         
+        function col = is_trajectory_collision(this, trajectory)
+            col = false;
+            for i=1:size(trajectory.y,1)
+                if (this.is_collision(trajectory.y(i,1,1), trajectory.y(i,2,1)))
+                    col = true;
+                    return;
+                end
+            end
+        end
+        
         function free = is_area_free(this, X_lim, Y_lim)
             free = true;
             for x=X_lim
