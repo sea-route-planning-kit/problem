@@ -8,7 +8,7 @@ function psi_d = heading_guidance(x, p_k, p_k1)
     
     alpha_k = atan2(p_k1(2)-p_k(2), p_k1(1)-p_k(1));
     
-    epsillon = simulator.ship.R2(alpha_k)'*(p-p_k);
+    epsillon = prob.ship.R2(alpha_k)'*(p-p_k);
     e = epsillon(2);
     
     psi_d = alpha_k + atan(-e/Delta) - asin(v/U);

@@ -7,8 +7,8 @@ classdef Controller
    end
    methods
         function this = Controller(u_d, psi_d)
-            this.speed_controller = simulator.gnc.control.SpeedController();
-            this.heading_controller = simulator.gnc.control.HeadingController();
+            this.speed_controller = prob.gnc.control.SpeedController();
+            this.heading_controller = prob.gnc.control.HeadingController();
             this.u_d = u_d;
             this.psi_d = psi_d;
         end

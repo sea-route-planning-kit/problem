@@ -5,8 +5,8 @@ classdef GNC
    end
    methods
         function this = GNC(path)
-            this.controller = simulator.gnc.control.Controller(0, 0);
-            this.guidance = simulator.gnc.guidance.Guidance(path);
+            this.controller = prob.gnc.control.Controller(0, 0);
+            this.guidance = prob.gnc.guidance.Guidance(path);
         end
         
         function this = reset(this)
