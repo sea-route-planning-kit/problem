@@ -1,6 +1,7 @@
 classdef Scenario
     properties
         name
+        background_image
         x_limit
         y_limit
         t_max
@@ -9,8 +10,9 @@ classdef Scenario
         obstacles
     end
     methods
-        function this = Scenario(name, x_limit, y_limit, t_max, goal_position, start_position, obstacles)
+        function this = Scenario(name, background_image, x_limit, y_limit, t_max, goal_position, start_position, obstacles)
             this.name = name;
+            this.background_image = background_image;
             this.x_limit = x_limit;
             this.y_limit = y_limit;
             this.t_max = t_max;
@@ -50,12 +52,17 @@ classdef Scenario
         end
         
         function plot(this)
-            plot(this.obstacles);
             hold on
+            i = imread(this.background_image); 
+            image(this.x_limit, flipud(this.y_limit), i);
+            %uistack(h,'bottom')
+            plot(this.obstacles);
             plot(this.start_position(2), this.start_position(1), 'b*', 'linewidth', 2)
             plot(this.goal_position(2), this.goal_position(1), 'r*', 'linewidth', 2)
             
             plot(this.y_limit([1,2,2,1,1]), this.x_limit([1,1,2,2,1]), '-k')
+            
+            
         end
     end
 end
