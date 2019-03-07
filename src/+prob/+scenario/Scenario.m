@@ -53,9 +53,11 @@ classdef Scenario
         
         function plot(this)
             hold on
-            i = imread(this.background_image); 
-            image(this.x_limit, flipud(this.y_limit), i);
-            %uistack(h,'bottom')
+            if ~isempty(this.background_image)
+                i = imread(this.background_image); 
+                image(this.x_limit, flipud(this.y_limit), i);
+                %uistack(h,'bottom')
+            end
             plot(this.obstacles);
             plot(this.start_position(2), this.start_position(1), 'b*', 'linewidth', 2)
             plot(this.goal_position(2), this.goal_position(1), 'r*', 'linewidth', 2)
