@@ -1,3 +1,3 @@
 function ship = load(fileName)
-    ship = simulator.ship.parse(jsondecode(fileread(fileName)));
+    ship = prob.ship.parse(jsondecode(fileread(fileName)));
 end
