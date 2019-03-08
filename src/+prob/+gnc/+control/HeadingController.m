@@ -7,7 +7,7 @@ classdef HeadingController
             K_p = 500;
             K_i = 0;
             K_d = 5000;
-            this.pid_controller = simulator.gnc.control.PID_controller(K_p,K_i,K_d);
+            this.pid_controller = prob.gnc.control.PID_controller(K_p,K_i,K_d);
         end
         
         function this = reset(this)

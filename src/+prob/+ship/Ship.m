@@ -115,8 +115,8 @@ classdef Ship
             nu = x(4:6);
             psi = eta(3);
             % Ignoring wind and wave for now
-            x_dot = [ simulator.ship.R(psi)*nu;
-                this.M_inv*(tau - this.C(nu)*nu + this.D(nu)*nu) ];
+            x_dot = [ prob.ship.R(psi)*nu;
+                this.M_inv*(tau - this.C(nu)*nu - this.D(nu)*nu) ];
         end
         
         %% Helpers for trajectory prediction, should maybe not be here

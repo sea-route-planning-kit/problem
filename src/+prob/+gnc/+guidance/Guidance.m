@@ -31,14 +31,14 @@ classdef Guidance
             path_complete = this.k > size(this.path,1)-1;
             if path_complete
                 u_d = 0.01;
-                psi_d = simulator.gnc.guidance.heading_guidance(x, this.path(this.k-1,:)', this.path(this.k,:)');
+                psi_d = prob.gnc.guidance.heading_guidance(x, this.path(this.k-1,:)', this.path(this.k,:)');
             else
                 p_k = this.path(this.k,:)';
                 p_k1 = this.path(this.k+1,:)';
                 p = x(1:2);
 
                 u_d = 5;
-                psi_d = simulator.gnc.guidance.heading_guidance(x, p_k, p_k1); %% p instead of p_k?
+                psi_d = prob.gnc.guidance.heading_guidance(x, p_k, p_k1); %% p instead of p_k?
                 % Switching
                 if this.switching_condition(p)%((p_k1(1)-p(1))^2 + (p_k1(2)-p(2))^2 <= R^2)
                     this.k = this.k+1;
