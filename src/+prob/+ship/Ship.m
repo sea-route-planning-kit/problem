@@ -127,11 +127,17 @@ classdef Ship
             x_n(1:6,1) = x0.Data()';
             for i=2:N
                 x = x_n(1:6,i-1);
-                [controller, u] = controller.calculate(x,T);
+                if (isa(controller,'function_handle'))
+                    u = controller(x,T);
+                    controller_complete = false;
+                else
+                    [controller, u] = controller.calculate(x,T);
+                    controller_complete = controller.complete();
+                end
                 [~,x_next] = ode45(@(t,x) this.f(x,u), [0 T], x);
                 x_n(1:6,i) = x_next(end,:);
                 x_n(7:9,i) = u;
-                if (controller.complete() || (~isempty(stop_condition) && stop_condition(x)))
+                if (controller_complete || (~isempty(stop_condition) && stop_condition(x)))
                     x_n = x_n(:,1:i);
                     N = i;
                     break;
