@@ -7,9 +7,8 @@ function trajectory = simulate(ship, x0, controller, max_time, stop_condition)
     for i=2:N
         x = x_n(1:6,i-1);
         [controller, u] = controller.calculate(x,T);
-        k1 = ship.f(x, u);
-        k2 = ship.f(x+T/2*k1,u);
-        x_n(1:6,i) = x + k2*T; %% TODO: Upgrade simulation method
+        [~,x_next] = ode45(@(t,x) ship.f(x,u), [0 T], x);
+        x_n(1:6,i) = x_next(end,:);
         x_n(7:9,i) = u;
         if (controller.complete() || (~isempty(stop_condition) && stop_condition(x)))
             x_n = x_n(:,1:i);
