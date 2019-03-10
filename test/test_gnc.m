@@ -3,21 +3,32 @@ clear all
 ship = prob.ship.load('ship_viknes830.json');
 
 % Conditions
-path = [0 250 600 800 500 100 150;
-        0 250 0   500 600 250 400]';
-x0 = timeseries([0 0 0 5 0 0],0);
+path = [0 250 600 800 500 100 450;
+        0 250 0   500 600 250 200];
+u_d = 5;
+    
+xx0 = [0 0 0 0 0 0]';
+aux0 = [1;0];
 
-gnc = prob.gnc.GNC(path);
+settings.control.heading.K_p = 500;
+settings.control.heading.K_d = 5000;
+settings.control.surge.K_p = 3000;
+settings.control.surge.K_i = 300;
+settings.guidance.R = 100;
+settings.guidance.Delta = 60;
+
+gnc = @(xx,aux) prob.gnc.complete(xx, aux, path, u_d, ship, settings);
+
 
 % Simulate
-trajectory = ship.simulate(x0, gnc, 500, []);
+trajectory = ship.simulate(xx0, aux0, gnc, 800, @(xx,aux) aux(1) >= size(path,2));
 
 % Plot
 figure(1);
 clf
-plot(trajectory.Data(:,1), trajectory.Data(:,2), 'b', 'LineWidth', 2.0);
+plot(trajectory.xx(2,:), trajectory.xx(1,:), 'b', 'LineWidth', 2.0);
 hold on;
-plot(path(:,1), path(:,2), 'r--', 'LineWidth', 2.0);
+plot(path(2,:), path(1,:), 'r--', 'LineWidth', 2.0);
 grid on;
 title('Path following with GNC system');
 xlabel('$x$ [m]', 'interpreter', 'latex');

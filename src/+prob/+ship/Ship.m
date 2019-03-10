@@ -110,40 +110,37 @@ classdef Ship
             B = [ zeros(3,3); this.M_inv ];
         end
         
-        function x_dot = f(this, x, tau)
+        function x_dot = f(this, x, uu)
             eta = x(1:3);
             nu = x(4:6);
             psi = eta(3);
+            tau = [uu(1);0;uu(2)];
             % Ignoring wind and wave for now
             x_dot = [ prob.ship.R(psi)*nu;
                 this.M_inv*(tau - this.C(nu)*nu - this.D(nu)*nu) ];
         end
         
-        function trajectory = simulate(this, x0, controller, max_time, stop_condition)
-            T = 1;
-            N = max_time/T;
-            x_n = zeros(9,N);
+        function trajectory = simulate(this, xx0, aux0, controller, max_time, stop_condition)
 
-            x_n(1:6,1) = x0.Data()';
-            for i=2:N
-                x = x_n(1:6,i-1);
-                if (isa(controller,'function_handle'))
-                    u = controller(x,T);
-                    controller_complete = false;
-                else
-                    [controller, u] = controller.calculate(x,T);
-                    controller_complete = controller.complete();
-                end
-                [~,x_next] = ode45(@(t,x) this.f(x,u), [0 T], x);
-                x_n(1:6,i) = x_next(end,:);
-                x_n(7:9,i) = u;
-                if (controller_complete || (~isempty(stop_condition) && stop_condition(x)))
-                    x_n = x_n(:,1:i);
-                    N = i;
-                    break;
-                end
+            zz0 = [xx0; aux0];
+            
+            opts = odeset('Events', @stop_event);
+            [t,zz] = ode45(@fun, [0 max_time], zz0, opts);
+
+            trajectory.t = t';
+            trajectory.xx = zz(:,1:6)';
+            trajectory.aux = zz(:,7:end)';
+            trajectory.uu = controller(trajectory.xx, trajectory.aux);
+            
+            function zz_dot = fun(t, zz)
+                [uu,aux_dot] = controller(zz(1:6), zz(7:end));
+                zz_dot = [ this.f(zz(1:6),uu); aux_dot ];
             end
-            trajectory = timeseries(x_n',(0:(N-1))*T+x0.Time(1));
+            function [val, isterminal, direction] = stop_event(t, zz)
+                val = max(~isempty(stop_condition) && stop_condition(zz(1:6),zz(7:end)), 0);
+                isterminal = true;
+                direction = 0;
+            end
         end
         
         %% Helpers for trajectory prediction, should maybe not be here
@@ -159,6 +156,8 @@ classdef Ship
                 0                                            0                                               (this.N_r + 3*this.N_rrr*r^2)/this.I_z ];
         end
     end
+    
+    %% Really needed?
     methods(Static)
         function dxx = f_static(xx, uu, ship_model)
             m = ship_model.m;
