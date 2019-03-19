@@ -1,4 +1,5 @@
 clear
+clf
 
 ship = prob.ship.load('ship_viknes830.json');
 gnc_settings = jsondecode(fileread('viknes830.gnc.json'));

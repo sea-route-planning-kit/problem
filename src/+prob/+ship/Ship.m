@@ -120,21 +120,23 @@ classdef Ship
                 this.M_inv*(tau - this.C(nu)*nu - this.D(nu)*nu) ];
         end
         
-        function trajectory = simulate(this, xx0, aux0, controller, max_time, stop_condition)
+        function trajectory = simulate(this, xx0, aux0, c0, controller, cost, max_time, stop_condition)
 
-            zz0 = [xx0; aux0];
+            zz0 = [xx0; aux0; c0];
             
             opts = odeset('Events', @stop_event);
             [t,zz] = ode45(@fun, [0 max_time], zz0, opts);
 
             trajectory.t = t';
             trajectory.xx = zz(:,1:6)';
-            trajectory.aux = zz(:,7:end)';
+            trajectory.aux = zz(:,7:(6+length(aux0)))';
+            trajectory.c = zz(:,(7+length(aux0)):end)';
             trajectory.uu = controller(trajectory.xx, trajectory.aux);
             
             function zz_dot = fun(t, zz)
                 [uu,aux_dot] = controller(zz(1:6), zz(7:end));
-                zz_dot = [ this.f(zz(1:6),uu); aux_dot ];
+                c_dot = cost(t, zz(1:6), uu);
+                zz_dot = [ this.f(zz(1:6),uu); aux_dot; c_dot ];
             end
             function [val, isterminal, direction] = stop_event(t, zz)
                 val = max(~isempty(stop_condition) && stop_condition(zz(1:6),zz(7:end)), 0);

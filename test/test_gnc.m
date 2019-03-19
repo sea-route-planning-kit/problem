@@ -10,14 +10,15 @@ u_d = 5;
     
 xx0 = [0 0 0 0 0 0]';
 aux0 = [1;0];
+c0 = 0;
 
 
 
 gnc = @(xx,aux) prob.gnc.complete(xx, aux, path, u_d, ship, gnc_settings);
-
+cost = @(t, xx, uu) 1;
 
 % Simulate
-trajectory = ship.simulate(xx0, aux0, gnc, 800, @(xx,aux) aux(1) >= size(path,2));
+trajectory = ship.simulate(xx0, aux0, c0, gnc, cost, 800, @(xx,aux) aux(1) >= size(path,2));
 
 % Plot
 figure(1);
